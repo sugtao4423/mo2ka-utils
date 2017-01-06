@@ -1,0 +1,102 @@
+#!/bin/bash
+
+### Settings
+
+SCREENNAME='mo2ka'
+MO2KA_JAR='/home/tao/mo2ka/mo2ka.jar'
+MO2KA_LOG='/home/tao/mo2ka/mo2ka.screen.log'
+
+#############
+
+### mo2ka settings
+
+MO2KA_STOP_CMD='stop'
+MO2KA_STOP_LOG='mo2ka stopped'
+MO2KA_CREATE_SENTENCE_CMD='create-sentence'
+MO2KA_UPDATE_TAGGER_CMD='update-tagger'
+MO2KA_UPDATE_TAGGER_LOG='Update igo dic OK'
+
+##################
+
+run(){
+  screen -p 0 -S $SCREENNAME -X stuff "$1\n"
+}
+
+start(){
+  if [ $(status) = 0 ]; then
+    screen -mdS $SCREENNAME /bin/bash -c "java -Xmx6G -jar ${MO2KA_JAR} > ${MO2KA_LOG} 2>&1"
+    echo "mo2ka is started!"
+  else
+    echo "mo2ka is already running"
+  fi
+}
+
+stop(){
+  if [ $(status) = 0 ]; then
+    echo "mo2ka is not running"
+  else
+    run $MO2KA_STOP_CMD
+    while :
+    do
+      sleep 1
+      if [ "$(tail -1 ${MO2KA_LOG})" = "$MO2KA_STOP_LOG" ]; then
+        break
+      fi
+    done
+    echo "mo2ka was stopped"
+  fi
+}
+
+status(){
+  count=`ps -ef | grep "SCREEN -mdS ${SCREENNAME}" | grep -v grep | wc -l`
+  if [ $count = 0 ]; then
+    echo 0
+  else
+    echo 1
+  fi
+}
+
+create_sentence(){
+  run $MO2KA_CREATE_SENTENCE_CMD
+  sleep 0.5
+  echo $(tail -1 ${MO2KA_LOG})
+}
+
+update_tagger(){
+  run $MO2KA_UPDATE_TAGGER_CMD
+  while :
+  do
+    sleep 1
+    if [ "$(tail -1 ${MO2KA_LOG})" = "$MO2KA_UPDATE_TAGGER_LOG" ]; then
+      break
+    fi
+  done
+  echo $MO2KA_UPDATE_TAGGER_LOG
+}
+
+case $1 in
+  start)
+    start;;
+  stop)
+    stop;;
+  status)
+    if [ $(status) = 0 ]; then
+      echo "mo2ka is not running"
+    else
+      echo "mo2ka is running"
+    fi
+    ;;
+  status_num)
+    status;;
+  create_sentence)
+    create_sentence;;
+  update_tagger)
+    update_tagger;;
+
+  *)
+    echo "Usage: $0 {start|stop|status|status_num|create_sentence|update_tagger}"
+    exit 1
+    ;;
+esac
+
+exit 0

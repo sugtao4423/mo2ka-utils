@@ -1,0 +1,9 @@
+#!/bin/bash
+
+cd `dirname $0`
+CURRENT=`pwd`
+
+sudo ln -s $CURRENT/mo2ka /usr/bin/
+sudo ln -s $CURRENT/bash_completion.d/mo2ka /etc/bash_completion.d/
+
+exit 0

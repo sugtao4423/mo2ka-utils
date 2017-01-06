@@ -1,0 +1,21 @@
+#!/bin/bash
+
+# Settings
+
+NEOLOGD_DIR='/home/tao/mo2ka/mecab-ipadic-neologd'
+IGO_JAR='/home/tao/mo2ka/igo-0.4.5.jar'
+
+##########
+
+
+${NEOLOGD_DIR}/bin/install-mecab-ipadic-neologd -a -n <<< 'no'
+echo "Renewed neologd dic"
+
+BUILD_DIR=`ls -t ${NEOLOGD_DIR}/build/ | head -1`
+
+IGO_JAR_BASENAME=`basename $IGO_JAR`
+echo -e "make igo dic\nUsing ${BUILD_DIR}"
+cd "${NEOLOGD_DIR}/build/${BUILD_DIR}"
+cp $IGO_JAR .
+java -Xmx5G -cp $IGO_JAR_BASENAME net.reduls.igo.bin.BuildDic ../../../neologd . "utf-8"
+rm $IGO_JAR_BASENAME
