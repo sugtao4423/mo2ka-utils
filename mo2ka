@@ -11,10 +11,8 @@ MO2KA_LOG='/home/tao/mo2ka/mo2ka.screen.log'
 ### mo2ka settings
 
 MO2KA_STOP_CMD='stop'
-MO2KA_STOP_LOG='mo2ka stopped'
 MO2KA_CREATE_SENTENCE_CMD='create-sentence'
 MO2KA_UPDATE_TAGGER_CMD='update-tagger'
-MO2KA_UPDATE_TAGGER_LOG='Update igo dic OK'
 
 ##################
 
@@ -36,14 +34,7 @@ stop(){
     echo "mo2ka is not running"
   else
     run $MO2KA_STOP_CMD
-    while :
-    do
-      sleep 1
-      if [ "$(tail -1 ${MO2KA_LOG})" = "$MO2KA_STOP_LOG" ]; then
-        break
-      fi
-    done
-    echo "mo2ka was stopped"
+    echo_new_log
   fi
 }
 
@@ -58,20 +49,16 @@ status(){
 
 create_sentence(){
   run $MO2KA_CREATE_SENTENCE_CMD
-
-  echo $(tailf -n0 $MO2KA_LOG | while read l; do echo $l; pkill -f "tailf -n0 ${MO2KA_LOG}"; done)
+  echo_new_log
 }
 
 update_tagger(){
   run $MO2KA_UPDATE_TAGGER_CMD
-  while :
-  do
-    sleep 1
-    if [ "$(tail -1 ${MO2KA_LOG})" = "$MO2KA_UPDATE_TAGGER_LOG" ]; then
-      break
-    fi
-  done
-  echo $MO2KA_UPDATE_TAGGER_LOG
+  echo_new_log
+}
+
+echo_new_log(){
+  echo $(tailf -n0 $MO2KA_LOG | while read l; do echo $l; pkill -f "tailf -n0 ${MO2KA_LOG}"; done)
 }
 
 case $1 in
