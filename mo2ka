@@ -58,8 +58,8 @@ status(){
 
 create_sentence(){
   run $MO2KA_CREATE_SENTENCE_CMD
-  sleep 0.5
-  echo $(tail -1 ${MO2KA_LOG})
+
+  echo $(tailf -n0 $MO2KA_LOG | while read l; do echo $l; pkill -f "tailf -n0 ${MO2KA_LOG}"; done)
 }
 
 update_tagger(){
