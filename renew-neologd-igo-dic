@@ -7,6 +7,8 @@ IGO_JAR='/home/tao/mo2ka/igo-0.4.5.jar'
 
 ##########
 
+getopts "n" not_remove_oldbuild
+
 current_build=`ls -t ${NEOLOGD_DIR}/build/ | head -1`
 ${NEOLOGD_DIR}/bin/install-mecab-ipadic-neologd -a -n <<< 'no'
 build_dir=`ls -t ${NEOLOGD_DIR}/build/ | head -1`
@@ -24,3 +26,7 @@ cd "${NEOLOGD_DIR}/build/${build_dir}"
 cp $IGO_JAR .
 java -Xmx5G -cp $igo_jar_basename net.reduls.igo.bin.BuildDic ../../../neologd . "utf-8"
 rm $igo_jar_basename
+
+if [ "${not_remove_oldbuild}" != "n" ]; then
+	rm -rf $current_build && echo "Removed old neologd dic: `basename ${current_build}`"
+fi
