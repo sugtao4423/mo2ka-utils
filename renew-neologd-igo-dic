@@ -14,7 +14,7 @@ ${NEOLOGD_DIR}/bin/install-mecab-ipadic-neologd -a -n <<< 'no'
 build_dir=`ls -t ${NEOLOGD_DIR}/build/ | head -1`
 
 if [ "${current_build}" = "${build_dir}" ]; then
-	echo -e "\nThere is no update of neologd dic"
+	echo -e "\nThere is no update of neologd dic" 1>&2
 	exit 1
 fi
 
@@ -30,3 +30,5 @@ rm $igo_jar_basename
 if [ "${not_remove_oldbuild}" != "n" ]; then
 	rm -rf $current_build && echo "Removed old neologd dic: `basename ${current_build}`"
 fi
+
+exit 0
