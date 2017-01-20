@@ -7,15 +7,20 @@ IGO_JAR='/home/tao/mo2ka/igo-0.4.5.jar'
 
 ##########
 
-
+current_build=`ls -t ${NEOLOGD_DIR}/build/ | head -1`
 ${NEOLOGD_DIR}/bin/install-mecab-ipadic-neologd -a -n <<< 'no'
-echo "Renewed neologd dic"
+build_dir=`ls -t ${NEOLOGD_DIR}/build/ | head -1`
 
-BUILD_DIR=`ls -t ${NEOLOGD_DIR}/build/ | head -1`
+if [ "${current_build}" = "${build_dir}" ]; then
+	echo -e "\nThere is no update of neologd dic"
+	exit 1
+fi
 
-IGO_JAR_BASENAME=`basename $IGO_JAR`
-echo -e "make igo dic\nUsing ${BUILD_DIR}"
-cd "${NEOLOGD_DIR}/build/${BUILD_DIR}"
+echo -e "\nRenewed neologd dic"
+
+igo_jar_basename=`basename $IGO_JAR`
+echo -e "make igo dic\nUsing ${build_dir}"
+cd "${NEOLOGD_DIR}/build/${build_dir}"
 cp $IGO_JAR .
-java -Xmx5G -cp $IGO_JAR_BASENAME net.reduls.igo.bin.BuildDic ../../../neologd . "utf-8"
-rm $IGO_JAR_BASENAME
+java -Xmx5G -cp $igo_jar_basename net.reduls.igo.bin.BuildDic ../../../neologd . "utf-8"
+rm $igo_jar_basename
