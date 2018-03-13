@@ -28,7 +28,7 @@ java -Xmx5G -cp $igo_jar_basename net.reduls.igo.bin.BuildDic ../../../neologd .
 rm $igo_jar_basename
 
 if [ "${not_remove_oldbuild}" != "n" ]; then
-	rm -rf $current_build && echo "Removed old neologd dic: `basename ${current_build}`"
+	rm -rf ${NEOLOGD_DIR}/build/$current_build && echo "Removed old neologd dic: `basename ${current_build}`"
 fi
 
 exit 0
