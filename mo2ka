@@ -11,6 +11,7 @@ MO2KA_LOG='/home/tao/mo2ka/mo2ka.screen.log'
 ### mo2ka settings
 
 MO2KA_STOP_CMD='stop'
+MO2KA_RELOAD_CONF='reload-config'
 MO2KA_CREATE_SENTENCE_CMD='create-sentence'
 MO2KA_UPDATE_TAGGER_CMD='update-tagger'
 
@@ -47,6 +48,11 @@ status(){
   fi
 }
 
+reload_config(){
+  run $MO2KA_RELOAD_CONF
+  echo_new_log
+}
+
 create_sentence(){
   run $MO2KA_CREATE_SENTENCE_CMD
   echo_new_log
@@ -75,13 +81,15 @@ case $1 in
     ;;
   status_num)
     status;;
+  reload_config)
+    reload_config;;
   create_sentence)
     create_sentence;;
   update_tagger)
     update_tagger;;
 
   *)
-    echo "Usage: $0 {start|stop|status|status_num|create_sentence|update_tagger}"
+    echo "Usage: $0 {start|stop|status|status_num|reload_config|create_sentence|update_tagger}"
     exit 1
     ;;
 esac

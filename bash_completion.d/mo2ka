@@ -1,5 +1,5 @@
 _mo2ka_commands(){
-  echo "start stop status status_num create_sentence update_tagger"
+  echo "start stop status status_num reload_config create_sentence update_tagger"
 }
 
 _mo2ka(){
